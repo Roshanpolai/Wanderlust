@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const initData = require("./data.js");
 const Listing = require("../models/listing.js");
-// const { init } = require("../models/listing");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/test";
 
@@ -25,7 +24,7 @@ async function main() {
 
 const initDB = async () => {
   await Listing.deleteMany({});
-  
+
   const cleanedData = initData.data.map((obj) => ({
     ...obj,
     image: obj.image.url, // convert object → string
