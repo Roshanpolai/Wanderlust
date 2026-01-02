@@ -1,0 +1,19 @@
+.navbar {
+    height: 5rem;
+}
+/* .navbar-brand {
+    color: #fe424d;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.nav-link {
+   color: #222222 !important;
+} */
+
+
+.navbar {
+  background-color: red !important;
+}
+
+//implemented navbar design

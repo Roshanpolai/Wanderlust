@@ -1,0 +1,66 @@
+<nav class="navbar navbar-expand-lg bg-white border-bottom">
+  <div class="container-fluid px-5">
+
+    <!-- Logo -->
+    <a class="navbar-brand fw-bold text-danger fs-4" href="/">
+      airbnb
+    </a>
+
+    <!-- Center links -->
+    <div class="mx-auto d-none d-lg-flex gap-4">
+      <a class="nav-link fw-semibold text-dark active" href="/">Homes</a>
+      <a class="nav-link text-muted" href="#">Experiences</a>
+      <a class="nav-link text-muted" href="#">Services</a>
+    </div>
+
+    <!-- Right -->
+    <div class="d-flex align-items-center gap-3">
+      <a href="#" class="text-dark fw-semibold text-decoration-none">
+        Become a host
+      </a>
+
+      <div class="border rounded-pill px-3 py-1 d-flex align-items-center gap-2">
+        <i class="fa-solid fa-bars"></i>
+        <i class="fa-solid fa-user"></i>
+      </div>
+    </div>
+
+
+  </div>
+</nav>
+
+<!-- Search bar -->
+<div class="container my-3">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+
+      <div class="d-flex align-items-center bg-white shadow-sm rounded-pill px-3 py-2">
+
+        <div class="flex-fill px-2">
+          <small class="fw-bold">Where</small><br>
+          <span class="text-muted">Search destinations</span>
+        </div>
+
+        <div class="vr"></div>
+
+        <div class="flex-fill px-2">
+          <small class="fw-bold">When</small><br>
+          <span class="text-muted">Add dates</span>
+        </div>
+
+        <div class="vr"></div>
+
+        <div class="flex-fill px-2">
+          <small class="fw-bold">Who</small><br>
+          <span class="text-muted">Add guests</span>
+        </div>
+
+        <button class="btn btn-danger rounded-circle ms-2">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div> 
