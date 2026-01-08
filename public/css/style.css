@@ -1,19 +1,13 @@
 .navbar {
     height: 5rem;
+    background-color: white;
 }
-/* .navbar-brand {
+
+.fa-compass {
     color: #fe424d;
-    font-size: 1.8rem;
-    font-weight: 600;
+    font-size: 2rem;
 }
 
 .nav-link {
-   color: #222222 !important;
-} */
-
-
-.navbar {
-  background-color: red !important;
+    color: #222222 !important;
 }
-
-//implemented navbar design
