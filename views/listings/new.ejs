@@ -1,18 +1,19 @@
 <% layout("/layouts/boilerplate") %>
 <div class="row mt-3 mb-3">
   <div class="col-8 offset-2">
-    <h3>Create New Listing</h3> 
-    <form method="POST" action="/listings">
-
+    <h3>Create New Listing</h3>
+    <form method="POST" action="/listings" class="needs-validation" novalidate>
+     
       <div class="mb-3">
         <label for="title" class="form-label">Title:</label>
         <input
           type="text"
-          id="title"
           name="listing[title]"
           class="form-control"
+          placeholder="Add a title"
           required
         />
+        <div class="invalid-feedback">Please enter a title</div>
       </div>
 
       <div class="mb-3">
@@ -23,6 +24,7 @@
           class="form-control"
           required
         ></textarea>
+        <div class="invalid-feedback">Please enter a short description</div>
       </div>
 
       <div class="mb-3">
@@ -43,8 +45,10 @@
             id="price"
             name="listing[price]"
             class="form-control"
+            placeholder="1200"
             required
           />
+          <div class="invalid-feedback">Price should be valid</div>
         </div>
 
         <div class="mb-3 col-8">
@@ -54,8 +58,10 @@
             id="country"
             name="listing[country]"
             class="form-control"
+            placeholder="India"
             required
           />
+          <div class="invalid-feedback">Country should be valid</div>
         </div>
       </div>
 
@@ -66,10 +72,30 @@
           id="location"
           name="listing[location]"
           class="form-control"
+          placeholder="Jaipur,Rajasthan"
+          required
         />
+        <div class="invalid-feedback">Location should be valid</div>
+      </div>
+
+      <div class="col-12">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            id="invalidCheck"
+            required
+          />
+          <label class="form-check-label" for="invalidCheck">
+            Agree to terms and conditions
+          </label>
+          <div class="invalid-feedback">You must agree before submitting.</div>
+        </div>
       </div>
 
       <button type="submit" class="btn btn-dark add-btn mt-3 mb-5">Add</button>
     </form>
   </div>
 </div>
+<script src="/js/script.js"></script>
