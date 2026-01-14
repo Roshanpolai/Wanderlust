@@ -7,6 +7,7 @@ const ejsMate = require("ejs-mate");
 const Listing = require("./models/listing.js");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
+const { listingSchema } = require("./schema.js");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/test";
 
@@ -33,7 +34,18 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-//Get all listings
+//validation middleware
+const validateListing = (req, res, next) => {
+  let { error } = listingSchema.validate(req.body);
+  if (error) {
+    let errMsg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(400, errMsg); //400 Bad-request
+  } else {
+    next();
+  }
+};
+
+//Get all listings (Index Route)
 app.get("/listings", async (req, res) => {
   const allListings = await Listing.find({});
   res.render("listings/index.ejs", { allListings });
@@ -57,10 +69,8 @@ app.get(
 //Create Route -> listing
 app.post(
   "/listings",
+  validateListing,
   wrapAsync(async (req, res, next) => {
-    if(!req.body.listing){
-      throw new ExpressError(400, "Send valid Data for listing");//400 Bad-request
-    }
     const newListing = new Listing(req.body.listing);
     await newListing.save();
     res.redirect(`/listings/${newListing._id}`);
@@ -80,10 +90,8 @@ app.get(
 //Update listing
 app.put(
   "/listings/:id",
+  validateListing,
   wrapAsync(async (req, res) => {
-    if(!req.body.listing){
-      throw new ExpressError(400, "Send valid Data for listing");//400 Bad-request
-    }
     const { id } = req.params;
     const updatedListing = await Listing.findByIdAndUpdate(id, {
       ...req.body.listing,
@@ -115,6 +123,8 @@ app.delete(
 //     res.send("Successful testing");
 // });
 
+
+
 // 404 handler
 app.use((req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
@@ -122,9 +132,9 @@ app.use((req, res, next) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-  const statusCode = Number(err.statusCode) || 500;
-  const message = err.message || "Something went wrong";
-  res.status(statusCode).send(message);
+  let { statusCode = 500, message = "Something went wrong" } = err;
+  // res.status(statusCode).send(message);
+  res.status(statusCode).render("error.ejs", { message });
 });
 
 app.listen(8000, () => {
