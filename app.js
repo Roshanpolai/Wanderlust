@@ -14,8 +14,9 @@ const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
 // Routes
-const listings = require("./routes/listing.js");
-const reviews = require("./routes/review.js");
+const listingsRoute = require("./routes/listing.js");
+const reviewsRoute = require("./routes/review.js");
+const usersRoute = require("./routes/user.js");
 
 // MongoDB URL
 const MONGO_URL = "mongodb://127.0.0.1:27017/test";
@@ -74,20 +75,11 @@ app.get("/", (req, res) => {
   res.send("Home Page");
 });
 
-// Demo user route
-app.get("/demouser", async (req, res) => {
-  let fakeUser = new User({
-    username: "chris",
-    email: "chris@example.com",
-  });
-
-  let registeredUser = await User.register(fakeUser, "chrispassword");
-  res.send(registeredUser);
-});
 
 // App routes
-app.use("/listings", listings);
-app.use("/listings/:id/reviews", reviews);
+app.use("/listings", listingsRoute);
+app.use("/listings/:id/reviews", reviewsRoute);
+app.use("/users", usersRoute);
 
 // 404
 app.use((req, res, next) => {
