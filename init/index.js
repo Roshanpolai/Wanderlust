@@ -24,6 +24,9 @@ async function main() {
 
 const initDB = async () => {
   await Listing.deleteMany({});
+  initData.data.map((obj) => ({
+    ...obj, owner: "697cb50b5c626ef5923405c1", // add owner field
+  }));
 
   const cleanedData = initData.data.map((obj) => ({
     ...obj,
