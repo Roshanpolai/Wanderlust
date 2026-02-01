@@ -16,7 +16,6 @@
   </div>
 
   <!-- Edit and Delete Buttons (ONLY OWNER) -->
-  <% if(currentUser && listing.owner && String(currentUser._id) === String(listing.owner._id)) { %>
     <div class="btns">
       <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-1 offset-3 edit-btn">
         Update
@@ -28,7 +27,6 @@
         </button>
       </form>
     </div>
-  <% } %>
 
   <!-- Review Section -->
   <div class="col-8 offset-3 mb-3">

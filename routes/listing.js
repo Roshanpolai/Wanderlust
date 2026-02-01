@@ -1,23 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
-const ExpressError = require("../utils/ExpressError.js");
-const { listingSchema } = require("../schema.js");
 const Listing = require("../models/listing.js");
-const {isLoggedIn} = require("../middleware.js");
+const {isLoggedIn, isOwner, validateListing} = require("../middleware.js");
 
-
-//validation middleware
-const validateListing = (req, res, next) => {
-  let { error } = listingSchema.validate(req.body);
-  if (error) {
-    let errMsg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(400, errMsg); //400 Bad-request
-  } else {
-    next();
-  }
-};
-
+//Index route - get all listings
 router.get("/", async (req, res) => {
   const allListings = await Listing.find({});
   res.render("listings/index.ejs", { allListings });
@@ -65,6 +52,7 @@ router.post(
 router.get(
   "/:id/edit",
   isLoggedIn,
+  isOwner,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
@@ -80,24 +68,23 @@ router.get(
 router.put(
   "/:id",
   isLoggedIn,
+  isOwner,
   validateListing,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     let listing = await Listing.findById(id);
-    if(!listing.owner.equals(res.locals.currentUser._id)){
-      req.flash("error", "You don't have permission to edit this listing.");
-      return res.redirect(`/listings/${id}`);
-    }
-    const updatedListing = await Listing.findByIdAndUpdate(id, {...req.body.listing,});
-    req.flash("success","Listing Updated");
+    const updatedListing = await Listing.findByIdAndUpdate(id,{ ...req.body.listing },{ new: true });
+    req.flash("success", "Listing Updated");
     res.redirect(`/listings/${updatedListing._id}`);
   })
 );
+
 
 //Delete listing
 router.delete(
   "/:id",
   isLoggedIn,
+  isOwner,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     let deletedListing = await Listing.findByIdAndDelete(id);
