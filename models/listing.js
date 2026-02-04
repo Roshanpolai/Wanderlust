@@ -9,12 +9,8 @@ const  listingSchema = new Schema({
   },
   description: String,
   image: {
-    type: String,
-    default: "https://images.unsplash.com/photo-1709884735626-63e92727d8b6?q=80&w=1228&auto=format&fit=crop",
-    set: (v) =>
-      v === ""
-        ? "https://images.unsplash.com/photo-1709884735626-63e92727d8b6?q=80&w=1228&auto=format&fit=crop"
-        : v,
+    url: String,
+    filename: String
   },
   price: Number,
   location: String,

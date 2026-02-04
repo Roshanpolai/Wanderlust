@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV != "production"){
+  require("dotenv").config();
+}
+
 const express = require("express");
 const app = express();
 
@@ -73,14 +77,13 @@ app.use((req, res, next) => {
 
 // Home route 
 app.get("/", (req, res) => {
-  res.send("Home Page");
+  res.send("/listings");
 });
 
 
 // App routes app.use("/", usersRoute);
 app.use("/listings", listingsRoute);
 app.use("/listings/:id/reviews", reviewsRoute);
-
 app.use("/users", usersRoute);
 
 
@@ -90,10 +93,18 @@ app.use((req, res, next) => {
 });
 
 // Error handler
+// app.use((err, req, res, next) => {
+//   console.log("ERROR:", err); 
+
+//   let { statusCode = 500, message = "Something went wrong" } = err;
+//   res.status(statusCode).render("error.ejs", { message });
+// });
+
 app.use((err, req, res, next) => {
-  let { statusCode = 500, message = "Something went wrong" } = err;
-  res.status(statusCode).render("error.ejs", { message });
+  let { statusCode = 500, message = "Some Error Occured!" } = err;
+  res.status(statusCode).render("listings/error", { message });
 });
+
 
 // Server
 app.listen(8000, () => {
