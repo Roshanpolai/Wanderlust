@@ -13,15 +13,9 @@ if (!coordinates || coordinates.length !== 2) {
   });
 
   map.addControl(
-    new mapboxgl.NavigationControl({ showCompass: false }),
+    new mapboxgl.NavigationControl({ visualizePitch: true }),
     "top-right"
   );
-
-  map.scrollZoom.disable();
-
-  if (window.innerWidth < 768) {
-    map.scrollZoom.enable();
-  }
 
   new mapboxgl.Marker({ color: "#000" })
     .setLngLat(coordinates)
@@ -31,12 +25,4 @@ if (!coordinates || coordinates.length !== 2) {
       )
     )
     .addTo(map);
-
-  map.flyTo({
-    center: offsetCenter,
-    zoom: 13,
-    speed: 1.2,
-    curve: 1,
-    essential: true,
-  });
 }

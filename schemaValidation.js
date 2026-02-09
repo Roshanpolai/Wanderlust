@@ -1,37 +1,22 @@
-// const Joi = require("joi");
-
-// module.exports.listingSchema = Joi.object({
-//   listing: Joi.object({
-//     title: Joi.string().required(),
-//     description: Joi.string().required(),
-//     location: Joi.string().required(),
-//     country: Joi.string().required(),
-//     price: Joi.number().required().min(0),
-//     Image:Joi.string().allow(null,""),
-//   }).required(),
-// });
-
-
-// module.exports.reviewSchema = Joi.object({
-//   review: Joi.object({
-//     rating: Joi.number().required().min(1).max(5),
-//     comment: Joi.string().required(),
-//   }).required(),
-// });
-
 const Joi = require("joi");
 
+// LISTING SCHEMA
 module.exports.listingSchema = Joi.object({
   listing: Joi.object({
-    title: Joi.string().required(),
-    description: Joi.string().required(),
+    title: Joi.string().trim().required(),
+    description: Joi.string().trim().required(),
+
+    // Image is handled by Multer + Cloudinary
     image: Joi.object({
-      filename: Joi.string(),
-      url: Joi.string().required(),
-    }),
-    price: Joi.number().required().min(0),
-    location: Joi.string().required(),
-    country: Joi.string().required(),
+      filename: Joi.string().optional(),
+      url: Joi.string().optional(),
+    }).optional(),
+
+    price: Joi.number().min(0).required(),
+
+    location: Joi.string().trim().required(),
+    country: Joi.string().trim().required(),
+
     category: Joi.string()
       .valid(
         "trending",
@@ -48,9 +33,10 @@ module.exports.listingSchema = Joi.object({
   }).required(),
 });
 
+// REVIEW SCHEMA
 module.exports.reviewSchema = Joi.object({
   review: Joi.object({
-    rating: Joi.number().required().min(1).max(5),
-    comment: Joi.string().required(),
+    rating: Joi.number().min(1).max(5).required(),
+    comment: Joi.string().trim().required(),
   }).required(),
 });

@@ -1,13 +1,9 @@
-/* =====================================================
-   GLOBAL STYLES
-===================================================== */
+/* GLOBAL STYLES */
 body {
   font-family: "Plus Jakarta Sans", sans-serif !important;
 }
 
-/* =====================================================
-   NAVBAR
-===================================================== */
+/*  NAVBAR */
 .navbar {
   min-height: 6rem;                 
   background-color: #ffffff;
@@ -34,9 +30,7 @@ body {
   transform: scale(1.05);
 }
 
-/* ============================
-   NAVBAR SEARCH (NARROW)
-============================ */
+/*  NAVBAR SEARCH  */
 .search-btn {
   height: 42px;               
   border-radius: 999px;
@@ -70,9 +64,7 @@ body {
   background-color: #e0515a;
 }
 
-/* =====================================================
-   USER MENU (RIGHT)
-===================================================== */
+/*  USER MENU  */
 .user-menu {
   display: flex;
   align-items: center;
@@ -112,9 +104,7 @@ body {
   background: #f7f7f7;
 }
 
-/* =====================================================
-   FLASH MESSAGES
-===================================================== */
+/* FLASH MESSAGES */
 .flash-wrapper {
   display: flex;
   justify-content: center;
@@ -140,16 +130,12 @@ body {
   opacity: 1;
 }
 
-/* =====================================================
-   CATEGORY FILTER BAR
-===================================================== */
+/* CATEGORY FILTER BAR */
 #filters {
   display: flex;
   align-items: center;
   gap: 40px;
   padding: 12px 24px;
-
-  /* fixes container clipping */
   margin-left: -24px;
   margin-right: -24px;
 
@@ -207,9 +193,7 @@ body {
   border-radius: 2px;
 }
 
-/* =====================================================
-   LISTING CARDS (INDEX)
-===================================================== */
+/* LISTING CARDS  */
 .listing-link {
   text-decoration: none !important;
   color: inherit !important;
@@ -244,9 +228,7 @@ body {
   font-weight: 400;
 }
 
-/* =====================================================
-   BUTTONS
-===================================================== */
+/* BUTTONS */
 .add-btn,
 .edit-btn {
   background-color: #fe424d !important;
@@ -258,9 +240,7 @@ body {
   background-color: #d63a40 !important;
 }
 
-/* =====================================================
-   SHOW PAGE
-===================================================== */
+/* SHOW PAGE */
 .show-card {
   padding-left: 0;
   padding-right: 0;
@@ -275,9 +255,7 @@ body {
   gap: 1rem;
 }
 
-/* =====================================================
-   REVIEWS & STAR RATING
-===================================================== */
+/*  REVIEWS & STAR RATING */
 .star-rating {
   direction: rtl;
   display: inline-flex;
@@ -300,9 +278,7 @@ body {
   color: #ffc107;
 }
 
-/* =====================
-   REVIEW CARDS
-===================== */
+/* REVIEW CARDS  */
 .review-card {
   border-radius: 14px;
   transition: all 0.2s ease;
@@ -313,18 +289,14 @@ body {
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
 }
 
-/* =====================================================
-   MAP
-===================================================== */
+/* MAP */
 .map-wrapper {
   margin-top: 1rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 .map-heading {
-  align-self: flex-start;
   margin-bottom: 0.5rem;
   font-size: 1.1rem;
   font-weight: 600;
@@ -333,40 +305,34 @@ body {
 #map-wrapper {
   width: 100%;
   height: 320px;
-  overflow: hidden;
   border-radius: 20px;
   margin-top: 1rem;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
   position: relative;
+  overflow: visible;
 }
 
 #map {
-  width: 125%;
+  width: 100%; 
   height: 100%;
 }
 
 .mapboxgl-control-container {
-  position: absolute;
-  z-index: 5;
+  z-index: 10;
 }
+
 .mapboxgl-ctrl-top-right {
-  right: 16px !important;
-  top: 16px !important;
+  top: 12px !important;
+  right: 12px !important;
 }
 
 @media (max-width: 768px) {
   #map-wrapper {
     height: 220px;
   }
-
-  #map {
-    width: 100%;
-  }
 }
 
-/* =====================================================
-   PAGINATION
-===================================================== */
+/*  PAGINATION */
 .pagination .page-link {
   border-radius: 8px;
   padding: 6px 12px;
@@ -392,9 +358,6 @@ body {
   background-color: #f8f9fa;
 }
 
-/* =====================================================
-   FOOTER
-===================================================== */
 /* ===== FOOTER ===== */
 .site-footer {
   background: #f7f7f7;
@@ -413,7 +376,6 @@ body {
   text-align: center;
 }
 
-/* Social Icons */
 .footer-social {
   display: flex;
   gap: 1.2rem;
@@ -439,7 +401,6 @@ body {
   transform: translateY(-3px);
 }
 
-/* Copyright */
 .footer-copy {
   font-size: 0.9rem;
   color: #555;
@@ -450,7 +411,6 @@ body {
   color: #222;
 }
 
-/* Links */
 .footer-links {
   display: flex;
   gap: 1.5rem;
@@ -467,7 +427,6 @@ body {
   color: #fe424d;
 }
 
-/* Responsive */
 @media (min-width: 768px) {
   .footer-container {
     flex-direction: row;
@@ -476,9 +435,7 @@ body {
   }
 }
 
-/* =====================================================
-   MOBILE FIXES
-===================================================== */
+/* MOBILE FIXES */
 @media (max-width: 991px) {
 
   .navbar-collapse {

@@ -1,26 +1,41 @@
 const Listing = require("../models/listing");
 const Review = require("../models/review");
 
+// CREATE REVIEW
 module.exports.createReview = async (req, res) => {
-  const listing = await Listing.findById(req.params.id).populate("reviews");
+  const { id } = req.params;
 
-  //Owner cannot review
-  if (listing.owner.equals(req.user._id)) {
-    req.flash("error", "Owner cannot review their own listing");
-    return res.redirect(`/listings/${listing._id}`);
+  const listing = await Listing.findById(id).populate({
+    path: "reviews",
+    select: "author",
+  });
+
+  if (!listing) {
+    req.flash("error", "Listing not found");
+    return res.redirect("/listings");
   }
 
-  //Prevent multiple reviews by same user
-  const alreadyReviewed = listing.reviews.some(review =>
-    review.author.equals(req.user._id)
+  if (!req.user) {
+    req.flash("error", "You must be logged in to review");
+    return res.redirect(`/listings/${id}`);
+  }
+
+  // Owner cannot review
+  if (listing.owner.equals(req.user._id)) {
+    req.flash("error", "Owner cannot review their own listing");
+    return res.redirect(`/listings/${id}`);
+  }
+
+  // Prevent multiple reviews
+  const alreadyReviewed = listing.reviews.some(
+    (review) => review.author.equals(req.user._id)
   );
 
   if (alreadyReviewed) {
     req.flash("error", "You have already reviewed this listing");
-    return res.redirect(`/listings/${listing._id}`);
+    return res.redirect(`/listings/${id}`);
   }
 
-  //Create review
   const newReview = new Review(req.body.review);
   newReview.author = req.user._id;
 
@@ -29,15 +44,32 @@ module.exports.createReview = async (req, res) => {
   await newReview.save();
   await listing.save();
 
-  req.flash("success", "New Review Added");
-  res.redirect(`/listings/${listing._id}`);
+  req.flash("success", "New review added");
+  res.redirect(`/listings/${id}`);
 };
 
-module.exports.deleteReview = async(req,res) => {
-  let { id, reviewId } = req.params;
+// DELETE REVIEW
+module.exports.deleteReview = async (req, res) => {
+  const { id, reviewId } = req.params;
 
-  await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
+  const review = await Review.findById(reviewId);
+  if (!review) {
+    req.flash("error", "Review not found");
+    return res.redirect(`/listings/${id}`);
+  }
+
+  // Only review author can delete
+  if (!review.author.equals(req.user._id)) {
+    req.flash("error", "You are not allowed to delete this review");
+    return res.redirect(`/listings/${id}`);
+  }
+
+  await Listing.findByIdAndUpdate(id, {
+    $pull: { reviews: reviewId },
+  });
+
   await Review.findByIdAndDelete(reviewId);
-  req.flash("success", "Review Deleted!");
+
+  req.flash("success", "Review deleted!");
   res.redirect(`/listings/${id}`);
-}
+};

@@ -1,77 +1,88 @@
-if (process.env.NODE_ENV != "production") {
+if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const ExpressError = require("./utils/ExpressError.js");
+const ExpressError = require("./utils/ExpressError");
 const session = require("express-session");
 const MongoStore = require("connect-mongo").default;
 const flash = require("express-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const User = require("./models/user.js");
+const User = require("./models/user");
 
 // Routes
-const listingsRoute = require("./routes/listing.js");
-const reviewsRoute = require("./routes/review.js");
-const usersRoute = require("./routes/user.js");
+const listingsRoute = require("./routes/listing");
+const reviewsRoute = require("./routes/review");
+const usersRoute = require("./routes/user");
+const bookingRoutes = require("./routes/bookings");
 
-// DB URL
+
+// ENV & SAFETY CHECKS
 const dburl = process.env.ATLASDB_URL;
-app.locals.MAP_TOKEN = process.env.MAP_TOKEN;
-// DB Connection
 
-main()
+if (process.env.NODE_ENV === "production" && !process.env.SECRET) {
+  throw new Error("SESSION SECRET not set in production");
+}
+
+// DATABASE
+mongoose
+  .connect(dburl)
   .then(() => console.log("connected to DB"))
   .catch((err) => console.log(err));
 
-async function main() {
-  await mongoose.connect(dburl);
-}
-// View Engine
+// VIEW ENGINE
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Basic Middleware
+// MIDDLEWARE
+app.set("trust proxy", 1); 
+
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Session Store
+
+// SESSION STORE
 const store = MongoStore.create({
   mongoUrl: dburl,
-  crypto: { 
-    secret: process.env.SECRET || "defaultsecretkey",
+  crypto: {
+    secret: process.env.SECRET,
   },
   touchAfter: 24 * 60 * 60,
 });
 
-store.on("error", function (e) {
-  console.log("Session Store Error", e);
+store.on("error", (e) => {
+  console.log("SESSION STORE ERROR:", e);
 });
 
-// Session
-const sessionOptions = {
-  store,
-  secret: process.env.SECRET || "defaultsecretkey",
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    httpOnly: true,
-  },
-};
 
-app.use(session(sessionOptions));
+// SESSION CONFIG
+app.use(
+  session({
+    store,
+    name: "session",
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    },
+  })
+);
+
 app.use(flash());
 
-// Passport
+// PASSPORT
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -79,45 +90,36 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Flash locals
+
+// GLOBAL LOCALS
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.currentUser = req.user;
+  res.locals.MAP_TOKEN = process.env.MAP_TOKEN;
   next();
 });
 
-// App routes app.use("/", usersRoute);
+// ROUTES
 app.use("/listings", listingsRoute);
 app.use("/listings/:id/reviews", reviewsRoute);
 app.use("/users", usersRoute);
-const bookingRoutes = require("./routes/bookings");
 app.use("/bookings", bookingRoutes);
 
-// 404
+
+// 404 handler
 app.use((req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
 });
 
-// Error handler
-// app.use((err, req, res, next) => {
-//   console.log("ERROR:", err);
-
-//   let { statusCode = 500, message = "Something went wrong" } = err;
-//   res.status(statusCode).render("error.ejs", { message });
-// });
-
+// error handler
 app.use((err, req, res, next) => {
-  let { statusCode = 500, message = "Some Error Occured!" } = err;
+  const { statusCode = 500, message = "Something went wrong!" } = err;
   res.status(statusCode).render("listings/error", { message });
 });
 
-// Server
-app.listen(8000, () => {
-  console.log("Server listening on port 8000");
-});
-
-app.use((req, res, next) => {
-  res.locals.MAP_TOKEN = process.env.MAP_TOKEN;
-  next();
+// SERVER
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
