@@ -33,12 +33,17 @@
         </select>
 
         <div class="mb-3 mt-3">
-          <label class="form-label ">Original Listing Image</label>
+          <label class="form-label">Original Listing Image</label>
 
-          <div class="card p-2 shadow-sm" style="max-width: 350px;">
-            <img src="<%= originalImageUrl %>" alt="Original listing image" class="img-fluid rounded"
-              style="object-fit: cover; max-height: 220px;">
-          </div>
+          <% if (listing.image && listing.image.url) { %>
+            <div class="card p-2 shadow-sm" style="max-width: 350px;">
+              <img src="<%= listing.image.url %>" alt="Original listing image" class="img-fluid rounded"
+                style="object-fit: cover; max-height: 220px;">
+            </div>
+            
+            <% } else { %>
+              <p class="text-muted">No image available</p>
+              <% } %>
         </div>
 
 
