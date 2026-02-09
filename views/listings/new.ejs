@@ -16,15 +16,23 @@
           <div class="invalid-feedback">Please enter a short description</div>
         </div>
 
-        <div class="mb-3">
+        <label class="form-label">Category</label>
+        <select name="listing[category]" class="form-control" required>
+          <option value="">Select category</option>
+          <option value="trending">Trending</option>
+          <option value="rooms">Rooms</option>
+          <option value="iconic">Iconic Cities</option>
+          <option value="castles">Castles</option>
+          <option value="beach">Sea Beach</option>
+          <option value="pools">Amazing Pools</option>
+          <option value="camping">Camping</option>
+          <option value="farms">Farms</option>
+          <option value="arctic">Arctic</option>
+        </select>
+
+        <div class="mb-3 mt-3">
           <label for="image" class="form-label">Upload Listing image</label>
-          <input 
-          type="file" 
-          id="image" 
-          name="listing[image]" 
-          class="form-control"
-          required
-          />
+          <input type="file" id="image" name="listing[image]" class="form-control" required />
         </div>
 
 

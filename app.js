@@ -1,18 +1,16 @@
-if(process.env.NODE_ENV != "production"){
+if (process.env.NODE_ENV != "production") {
   require("dotenv").config();
 }
-
 const express = require("express");
 const app = express();
-
 const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
+const MongoStore = require("connect-mongo").default;
 const flash = require("express-flash");
-
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
@@ -22,18 +20,18 @@ const listingsRoute = require("./routes/listing.js");
 const reviewsRoute = require("./routes/review.js");
 const usersRoute = require("./routes/user.js");
 
-// MongoDB URL
-const MONGO_URL = "mongodb://127.0.0.1:27017/test";
-
+// DB URL
+const dburl = process.env.ATLASDB_URL;
+app.locals.MAP_TOKEN = process.env.MAP_TOKEN;
 // DB Connection
+
 main()
   .then(() => console.log("connected to DB"))
   .catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(dburl);
 }
-
 // View Engine
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
@@ -44,9 +42,23 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
+// Session Store
+const store = MongoStore.create({
+  mongoUrl: dburl,
+  crypto: { 
+    secret: process.env.SECRET || "defaultsecretkey",
+  },
+  touchAfter: 24 * 60 * 60,
+});
+
+store.on("error", function (e) {
+  console.log("Session Store Error", e);
+});
+
 // Session
 const sessionOptions = {
-  secret: "MySecretisConsistenct",
+  store,
+  secret: process.env.SECRET || "defaultsecretkey",
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -75,17 +87,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// Home route 
-app.get("/", (req, res) => {
-  res.send("/listings");
-});
-
-
 // App routes app.use("/", usersRoute);
 app.use("/listings", listingsRoute);
 app.use("/listings/:id/reviews", reviewsRoute);
 app.use("/users", usersRoute);
-
+const bookingRoutes = require("./routes/bookings");
+app.use("/bookings", bookingRoutes);
 
 // 404
 app.use((req, res, next) => {
@@ -94,7 +101,7 @@ app.use((req, res, next) => {
 
 // Error handler
 // app.use((err, req, res, next) => {
-//   console.log("ERROR:", err); 
+//   console.log("ERROR:", err);
 
 //   let { statusCode = 500, message = "Something went wrong" } = err;
 //   res.status(statusCode).render("error.ejs", { message });
@@ -105,8 +112,12 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("listings/error", { message });
 });
 
-
 // Server
 app.listen(8000, () => {
   console.log("Server listening on port 8000");
+});
+
+app.use((req, res, next) => {
+  res.locals.MAP_TOKEN = process.env.MAP_TOKEN;
+  next();
 });

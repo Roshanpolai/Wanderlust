@@ -1,33 +1,79 @@
+<style>
+    .search-btn {
+        background-color: #fe424d;
+        color: #fff;
+        border-radius: 25px;
+        padding: 0 1rem 0 1rem;
+    }
+
+    .search-btn:hover {
+        background-color: #fe424d;
+        color: #fff;
+    }
+
+    .search-btn i {
+        display: inline;
+        margin-right: 0.5rem;
+    }
+
+    .search-inp {
+        border-radius: 25px;
+        padding: 0.5rem 3rem 0.5rem 3rem;
+        font-size: 1rem;
+    }
+</style>
 <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom sticky-top">
     <div class="container-fluid">
-
         <!-- Left: Logo -->
-        <a class="navbar-brand" href="/">
-            <i class="fa-regular fa-compass"></i>
-        </a>
-
+        <div>
+            <a class="navbar-brand d-flex align-items-center" href="/listings">
+                <img src="/images/logo.svg" alt="WanderLust Logo" class="navbar-logo me-2" />
+            </a>
+        </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- <div class="navbar-nav me-auto mb-2 mb-lg-0">
+                <a class="nav-link" href="/listings">Explore</a>
+            </div> -->
 
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="/listings">All Listings</a></li>
-                <li class="nav-item"><a class="nav-link" href="/listings/new">Add new Listing</a></li>
-            </ul>
+            <div class="navbar-nav ms-auto">
+                <form class="d-flex align-items-center" role="search" action="/listings/search" method="GET">
+                    <input class="form-control search-inp" type="search" name="q" placeholder="Search destinations"
+                        required />
 
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <% if(!currentUser) { %>
-                    <li class="nav-item"><a class="nav-link" href="/users/signup">Signup</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/users/login">Login</a></li>
-                <% } %>
+                    <button class="search-btn ms-2" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>Search</span>
+                    </button>
+                </form>
+            </div>
 
-                <% if(currentUser) { %>
-                    <li class="nav-item"><a class="nav-link" href="/users/logout">Logout</a></li>
-                <% } %>
-            </ul>
+            <div class="ms-auto d-flex align-items-center position-relative">
+                <a class="nav-link me-3" href="/listings/new"><strong>Become a host</strong></a>
+                <div class="user-menu" id="menuBtn"> <i class="fa-solid fa-bars"></i> <i class="fa-regular fa-user"></i>
+                </div>
+
+                <!-- Dropdown -->
+                <div class="user-dropdown" id="dropdownMenu">
+                    <a href="#">Help Centre</a>
+                    <hr>
+                    <a class="nav-link me-3" href="/listings/new"><strong>Become a host</strong></a>
+                    <hr>
+                    <% if (!currentUser) { %>
+                        <a href="/users/signup">Sign up</a>
+                        <a href="/users/login">Log in</a>
+                        <% } %>
+
+                            <% if (currentUser) { %>
+                                <a href="/bookings">My Bookings</a>
+                                <a href="/users/logout">Logout</a>
+                                <% } %>
+                </div>
+
+            </div>
         </div>
     </div>
+    <script> const menuBtn = document.getElementById("menuBtn"); const dropdown = document.getElementById("dropdownMenu"); menuBtn.addEventListener("click", () => { dropdown.style.display = dropdown.style.display === "block" ? "none" : "block"; }); document.addEventListener("click", (e) => { if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) { dropdown.style.display = "none"; } }); </script>
 </nav>

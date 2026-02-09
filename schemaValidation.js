@@ -32,6 +32,19 @@ module.exports.listingSchema = Joi.object({
     price: Joi.number().required().min(0),
     location: Joi.string().required(),
     country: Joi.string().required(),
+    category: Joi.string()
+      .valid(
+        "trending",
+        "rooms",
+        "iconic",
+        "castles",
+        "beach",
+        "pools",
+        "camping",
+        "farms",
+        "arctic"
+      )
+      .required(),
   }).required(),
 });
 

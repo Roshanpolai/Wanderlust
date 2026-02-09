@@ -1,37 +1,126 @@
 <% layout("/layouts/boilerplate") %>
-  <%= success %>
 
-    <body>
-      <h3>All Listings</h3>
-      <br />
-      <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
-        <% for (let listing of allListings) { %>
-          <a href="/listings/<%= listing._id %>" class="listing-link">
-            <div class="card col listing-card">
-              <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height: 20rem" />
+  <div class="container ">
+    
+    <div id="filters">
 
-              <div class="card-img-overlay"></div>
+      <a href="/listings/category/trending" class="filter-link">
+        <div class="filter">
+          <div><i class="fa-solid fa-fire"></i></div>
+          <p>Trending</p>
+        </div>
+      </a>
+
+      <a href="/listings/category/rooms" class="filter-link">
+        <div class="filter">
+          <div><i class="fa-solid fa-bed"></i></div>
+          <p>Rooms</p>
+        </div>
+      </a>
+
+      <a href="/listings/category/iconic" class="filter-link">
+        <div class="filter">
+          <div><i class="fa-solid fa-mountain-city"></i></div>
+          <p>Iconic Cities</p>
+        </div>
+      </a>
+
+      <a href="/listings/category/castles" class="filter-link">
+        <div class="filter">
+          <div><i class="fa-brands fa-fort-awesome"></i></div>
+          <p>Castles</p>
+        </div>
+      </a>
+
+      <a href="/listings/category/beach" class="filter-link">
+        <div class="filter">
+          <div><i class="fa-solid fa-umbrella-beach"></i></div>
+          <p>Beach</p>
+        </div>
+      </a>
+
+      <a href="/listings/category/pools" class="filter-link">
+        <div class="filter">
+          <div><i class="fa-solid fa-person-swimming"></i></div>
+          <p>Pools</p>
+        </div>
+      </a>
+
+      <a href="/listings/category/camping" class="filter-link">
+        <div class="filter">
+          <div><i class="fa-solid fa-campground"></i></div>
+          <p>Camping</p>
+        </div>
+      </a>
+
+      <a href="/listings/category/farms" class="filter-link">
+        <div class="filter">
+          <div><i class="fa-solid fa-tractor"></i></div>
+          <p>Farms</p>
+        </div>
+      </a>
+
+      <a href="/listings/category/arctic" class="filter-link">
+        <div class="filter">
+          <div><i class="fa-solid fa-snowflake"></i></div>
+          <p>Arctic</p>
+        </div>
+      </a>
+
+    </div>
+
+    <div class="row g-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-2">
+      <% for (let listing of listings) { %>
+        <div class="col">
+          <a href="/listings/<%= listing._id %>" class="listing-link text-decoration-none">
+            <div class="card listing-card h-100 shadow-sm border-0">
+
+              <img src="<%= listing.image?.url || '/images/default.jpg' %>" class="card-img-top listing-img"
+                alt="listing_image" />
+
               <div class="card-body">
-                <p class="card-text">
-                  <b>
-                    <%= listing.title %>
-                  </b><br />
-                  &#8377;<%= listing.price.toLocaleString("en-IN") %> Per night
+                <h5 class="card-title mb-1 text-dark">
+                  <%= listing.title %>
+                </h5>
+                <p class="card-text text-muted mb-0">
+                  &#8377; <%= listing.price.toLocaleString("en-IN") %>
+                    <span class="fs-6">/ night</span>
                 </p>
               </div>
+
             </div>
           </a>
-          <% } %>
-      </div>
+        </div>
+        <% } %>
+    </div>
+  </div>
 
-      <!-- <ul>
-      <% for (let listing of allListings) { %>
-        <li>
-          <a href="/listings/<%= listing._id %>">
-            <%= listing.title %>
+  <% if (totalPages> 1) { %>
+    <nav class="mt-4">
+      <ul class="pagination justify-content-center gap-1">
+
+        <!-- Previous -->
+        <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+          <a class="page-link" href="?page=<%= currentPage - 1 %>" tabindex="-1">
+            ‹ Prev
           </a>
         </li>
-        <% } %>
-    </ul>
-  </body> -->
-    </body>
+
+        <% for (let i=1; i <=totalPages; i++) { %>
+          <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+            <a class="page-link" href="?page=<%= i %>">
+              <%= i %>
+            </a>
+          </li>
+          <% } %>
+
+            <!-- Next -->
+            <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+              <a class="page-link" href="?page=<%= currentPage + 1 %>">
+                Next ›
+              </a>
+            </li>
+
+      </ul>
+    </nav>
+    <% } %>

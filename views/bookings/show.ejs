@@ -1,0 +1,77 @@
+<% layout("/layouts/boilerplate") %>
+
+  <div class="container my-5" style="max-width: 720px;">
+
+    <h2 class="mb-4">Booking Summary</h2>
+
+    <div class="card shadow-sm p-4">
+
+      <h4 class="mb-3">
+        <%= booking.listing.title %>
+      </h4>
+
+      <p class="text-muted mb-2">
+        <%= booking.listing.location %>, <%= booking.listing.country %>
+      </p>
+
+      <hr />
+
+      <div class="row mb-2">
+        <div class="col-6 text-muted">Check-in</div>
+        <div class="col-6">
+          <%= booking.checkIn.toDateString() %>
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-6 text-muted">Check-out</div>
+        <div class="col-6">
+          <%= booking.checkOut.toDateString() %>
+        </div>
+      </div>
+
+      <% const nights=(booking.checkOut - booking.checkIn) / (1000 * 60 * 60 * 24); %>
+
+        <div class="row mb-2">
+          <div class="col-6 text-muted">Total nights</div>
+          <div class="col-6">
+            <%= nights %>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="col-6 text-muted">Price per night</div>
+          <div class="col-6">
+            ₹ <%= booking.listing.price.toLocaleString("en-IN") %>
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="row mb-3">
+          <div class="col-6 fw-bold">Total Price</div>
+          <div class="col-6 fw-bold">
+            ₹ <%= booking.totalPrice.toLocaleString("en-IN") %>
+          </div>
+        </div>
+
+        <p class="badge bg-warning text-dark">
+          Status: <%= booking.status %>
+        </p>
+
+        <% if (booking.status==="reserved" ) { %>
+          <form action="/bookings/<%= booking._id %>/cancel" method="POST" class="mt-3">
+            <button class="btn btn-outline-danger">
+              Cancel Reservation
+            </button>
+          </form>
+        <% } %>
+
+        <div class="mt-4">
+          <a href="/listings/<%= booking.listing._id %>" class="btn btn-outline-dark">
+            Back to Listing
+          </a>
+        </div>
+    </div>
+
+  </div>
