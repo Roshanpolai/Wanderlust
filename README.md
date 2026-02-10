@@ -74,8 +74,7 @@ Wanderlust/
    cd wanderlust
 
 2. Install dependencies
-```npm install
-```
+```npm install ```
 
 3.  Create a .env file
 ```
