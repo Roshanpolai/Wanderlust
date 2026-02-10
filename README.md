@@ -43,6 +43,7 @@ The platform provides an interactive and user-friendly experience for travelers 
 ---
 
 ## 📂 Project Structure
+```
 Wanderlust/
 │
 ├── controllers/ # Route logic & controllers
@@ -61,6 +62,7 @@ Wanderlust/
 ├── package-lock.json
 ├── .gitignore
 └── README.md
+```
 
 ---
 
