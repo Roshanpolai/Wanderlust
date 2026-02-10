@@ -74,46 +74,58 @@ Wanderlust/
    cd wanderlust
 
 2. Install dependencies
-npm install
+```npm install
+```
 
 3.  Create a .env file
+```
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_KEY=your_key
 CLOUDINARY_SECRET=your_secret
 MAPBOX_TOKEN=your_mapbox_token
 DB_URL=your_mongodb_url
 SECRET=your_session_secret
+```
 
-4.  Run the application
+5.  Run the application
+```
 npm start
 Open your browser and visit
 👉 http://localhost:8000
+```
 
-🔐 Authentication Flow:
+🔐 Authentication Flow
+```
 Users must log in to
 Add a listing
 Edit or delete their own listings
 Post reviews
 Unauthorized users can only view listings.
-
-🧠 Learning Outcomes:
+```
+🧠 Learning Outcomes
+```
 RESTful routing
 MVC architecture
 User authentication & authorization
 Database relationships with MongoDB
 Image upload & cloud storage
 API integration (Mapbox)
-
+```
 
 🌟 Future Enhancements:
+```
 🔍 Advanced search & filters
 ❤️ Wishlist / favorites feature
 💳 Payment gateway integration
 🧑‍💼 Host dashboard
 🌐 Deployment on cloud platforms
+```
 
 👨‍💻 Author
+```
 Roshan Polai
-
+```
 📄 License
+```
 This project is licensed under the MIT License.
+```
