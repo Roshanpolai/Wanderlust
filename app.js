@@ -22,6 +22,8 @@ const reviewsRoute = require("./routes/review");
 const usersRoute = require("./routes/user");
 const bookingRoutes = require("./routes/bookings");
 
+const aiRoute = require("./routes/ai");
+
 
 // ENV & SAFETY CHECKS
 const dburl = process.env.ATLASDB_URL;
@@ -43,7 +45,7 @@ app.set("views", path.join(__dirname, "views"));
 
 // MIDDLEWARE
 app.set("trust proxy", 1); 
-
+app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
@@ -100,6 +102,13 @@ app.use((req, res, next) => {
   next();
 });
 
+
+//AI ROUTES
+app.use("/ai", aiRoute);
+app.get("/plan-trip", (req, res) => {
+  res.render("ai/plan");
+});
+
 // ROOT ROUTE
 app.get("/", (req, res) => {
   res.redirect("/listings");
@@ -110,6 +119,7 @@ app.use("/listings", listingsRoute);
 app.use("/listings/:id/reviews", reviewsRoute);
 app.use("/users", usersRoute);
 app.use("/bookings", bookingRoutes);
+
 
 
 // 404 handler

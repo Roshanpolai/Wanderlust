@@ -1,0 +1,111 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="row mt-4">
+  <div class="col-md-6 offset-md-3">
+
+    <h3 class="text-center mb-4">✨ AI Trip Planner</h3>
+
+    <!-- FORM -->
+    <form id="tripForm" class="card p-3 shadow-sm">
+      
+      <div class="mb-3">
+        <input type="text" id="destination" class="form-control" placeholder="Destination (e.g. Goa)" required>
+      </div>
+
+      <div class="mb-3">
+        <input type="number" id="days" class="form-control" placeholder="Days (e.g. 3)" required>
+      </div>
+
+      <div class="mb-3">
+        <input type="number" id="budget" class="form-control" placeholder="Budget ₹" required>
+      </div>
+
+      <button class="btn btn-dark w-100">Generate Plan ✨</button>
+    </form>
+
+    <!-- LOADING -->
+    <div id="loading" class="text-center mt-3" style="display:none;">
+      ⏳ Generating your travel plan...
+    </div>
+
+    <!-- RESULT -->
+    <div id="result" class="mt-4"></div>
+
+  </div>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const form = document.getElementById("tripForm");
+  const loading = document.getElementById("loading");
+  const result = document.getElementById("result");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    loading.style.display = "block";
+    result.innerHTML = "";
+
+    const destination = document.getElementById("destination").value;
+    const days = document.getElementById("days").value;
+    const budget = document.getElementById("budget").value;
+
+    try {
+      const res = await fetch("/ai/plan", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ destination, days, budget }),
+      });
+
+      const data = await res.json();
+
+      loading.style.display = "none";
+
+      // Safety check
+      if (!data || !data.plan) {
+        result.innerHTML = `<div class="alert alert-danger">No plan generated</div>`;
+        return;
+      }
+
+      const cleanPlan = data.plan.replace(/^[\s\S]*?(Day\s*1:)/i, "$1");
+      const rawSections = cleanPlan.split(/Day\s*\d+:/);
+      
+      const sections = rawSections
+      .map(s => s.trim())
+      .filter(s => s.length > 0)
+      .slice(0, parseInt(days));
+
+      let html = `<h4 class="mb-3">📍 Your Travel Plan</h4>`;
+
+      sections.forEach((sec, index) => {
+        html += `
+          <div class="card mb-3 shadow-sm">
+            <div class="card-header bg-dark text-white">
+              Day ${index + 1}
+            </div>
+            <div class="card-body">
+              <p>${sec
+                .replace(/[#*]/g, "")
+                .replace(/\*\*/g, "")     
+                .replace(/\n/g, "<br>")   
+                }</p>
+            </div>
+          </div>
+        `;
+      });
+
+      result.innerHTML = html;
+
+    } catch (err) {
+      console.error(err);
+      loading.style.display = "none";
+      result.innerHTML = `<div class="alert alert-danger">Something went wrong</div>`;
+    }
+  });
+
+});
+</script>
