@@ -3,7 +3,7 @@
 <div class="row mt-4">
   <div class="col-md-6 offset-md-3">
 
-    <h3 class="text-center mb-4">✨ AI Trip Planner</h3>
+    <h3 class="text-center mb-4">AI Trip Planner</h3>
 
     <!-- FORM -->
     <form id="tripForm" class="card p-3 shadow-sm">
@@ -20,12 +20,12 @@
         <input type="number" id="budget" class="form-control" placeholder="Budget ₹" required>
       </div>
 
-      <button class="btn btn-dark w-100">Generate Plan ✨</button>
+      <button class="btn btn-dark w-100">Generate Plan</button>
     </form>
 
     <!-- LOADING -->
     <div id="loading" class="text-center mt-3" style="display:none;">
-      ⏳ Generating your travel plan...
+      Generating your travel plan...
     </div>
 
     <!-- RESULT -->
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .filter(s => s.length > 0)
       .slice(0, parseInt(days));
 
-      let html = `<h4 class="mb-3">📍 Your Travel Plan</h4>`;
+      let html = `<h4 class="mb-3"> Your Travel Plan</h4>`;
 
       sections.forEach((sec, index) => {
         html += `
